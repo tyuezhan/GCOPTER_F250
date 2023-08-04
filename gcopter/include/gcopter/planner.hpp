@@ -12,6 +12,8 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <sensor_msgs/PointCloud2.h>
 
+#include "plan_env/sdf_map.h"
+
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -20,7 +22,6 @@
 #include <chrono>
 #include <random>
 
-#include <kr_planning_msgs/VoxelMap.h>
 
 
 namespace gcopter
@@ -134,28 +135,36 @@ public:
     }
 
 
-    inline void setMap(const kr_planning_msgs::VoxelMap& map)
+    inline void setMap(std::shared_ptr<bg_planner::SDFMap>& map)
     {
         /// step one: convert map
-        const Eigen::Vector3i xyz(map.dim.x,
-                                  map.dim.y,
-                                  map.dim.z);
+        const Eigen::Vector3i xyz(map->mp_->map_voxel_num_(0),
+                                  map->mp_->map_voxel_num_(1),
+                                  map->mp_->map_voxel_num_(2));
 
-        const Eigen::Vector3d offset(map.origin.x, map.origin.y, map.origin.z);
-        voxelMap = voxel_map::VoxelMap(xyz, offset, map.resolution);
-        for (int m = 0; m < map.dim.z; m++) {
-            for (int j = 0; j < map.dim.y; j++) {
-                for (int i = 0; i < map.dim.x; i++) {
-                    Eigen::Vector3i idx(i, j, m);
-                    int vl = map.data[map.dim.y * map.dim.x * m +  map.dim.x * j + i ] ;
-                    if(vl == 100)
-                    {   
+        const Eigen::Vector3d offset(map->mp_->map_origin_(0), map->mp_->map_origin_(1), map->mp_->map_origin_(2));
+        voxelMap = voxel_map::VoxelMap(xyz, offset, map->mp_->resolution_);
+        for (int x = map->mp_->box_min_(0); x < map->mp_->box_max_(0); ++x)
+            for (int y = map->mp_->box_min_(1); y < map->mp_->box_max_(1); ++y)
+                for (int z = map->mp_->box_min_(2); z < map->mp_->box_max_(2); ++z) {
+                    if (map->getOccupancy(Eigen::Vector3i(x, y, z)) == bg_planner::SDFMap::OCCUPIED)
+                    {
+                        Eigen::Vector3i idx(x, y, z);
                         voxelMap.setOccupied(idx);
                     }
                 }
-            }
-        }
-
+        // for (int m = 0; m < map->mp_->map_voxel_num_(2); m++) {
+        //     for (int j = 0; j < map->mp_->map_voxel_num_(1); j++) {
+        //         for (int i = 0; i < map->mp_->map_voxel_num_(0); i++) {
+        //             Eigen::Vector3i idx(i, j, m);
+        //             int vl = map->md_->occupancy_buffer_[map.dim.y * map.dim.x * m +  map.dim.x * j + i ] ;
+        //             if(vl == 100)
+        //             {   
+        //                 voxelMap.setOccupied(idx);
+        //             }
+        //         }
+        //     }
+        // }
         voxelMap.dilate(std::ceil(config.dilateRadius / voxelMap.getScale()));
     }
 
