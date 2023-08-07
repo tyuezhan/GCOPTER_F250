@@ -2,15 +2,15 @@ MapTopic:                   '/voxel_map'
 
 TargetTopic:                '/move_base_simple/goal'
 
-DilateRadius:               0.1
+DilateRadius:               0.3
 
 VoxelWidth:                 0.10
 
 MapBound:                   [0, 20, 0, 10, 0.0, 10]
 
-TimeoutRRT:                 0.1
+TimeoutRRT:                 0.05
 
-MaxVelMag:                  1.5
+MaxVelMag:                  1.2
 
 MaxBdrMag:                  2.1
 

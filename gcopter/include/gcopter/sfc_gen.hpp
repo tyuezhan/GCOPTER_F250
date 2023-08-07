@@ -206,6 +206,8 @@ namespace sfc_gen
     }
 
 
+
+
     inline void getPolyConst(const std::vector<Eigen::Vector3d> &path,
                             const std::vector<Eigen::Vector3d> &points,
                             const Eigen::Vector3d &lowCorner,
@@ -232,22 +234,22 @@ namespace sfc_gen
         std::vector<Eigen::Vector3d> bs;
         valid_pc.reserve(points.size());
 
-        int cnt_num = 0;
+        //int cnt_num = 0;
         a = path[0];
             
         for (int i = 0; i < n; i++)
         {
             if (i > 0)
             {
-                if (checkInsidePoly(path[i], hpolys.back()) && cnt_num <= 40)
+                if (checkInsidePoly(path[i], hpolys.back()) && (a - path[i]).norm() <= progress)
                 {
-                    cnt_num ++;
+                    //cnt_num ++;
                     continue;
                 }
                 else
                 {
-                    b = path[i-1];
-                    cnt_num = 0;
+                    b = path[i];
+                    //cnt_num = 0;
                 }
             
             }
@@ -258,8 +260,8 @@ namespace sfc_gen
             bd(1, 3) = +std::max(std::min(a(0), b(0)) - range, lowCorner(0));
             bd(2, 3) = -std::min(std::max(a(1), b(1)) + range, highCorner(1));
             bd(3, 3) = +std::max(std::min(a(1), b(1)) - range, lowCorner(1));
-            bd(4, 3) = -std::min(std::max(a(2), b(2)) + range, highCorner(2));
-            bd(5, 3) = +std::max(std::min(a(2), b(2)) - range, lowCorner(2));
+            bd(4, 3) = -std::min(std::max(a(2), b(2)) + 0.8 * range, highCorner(2));
+            bd(5, 3) = +std::max(std::min(a(2), b(2)) - 0.5 * range, lowCorner(2));
 
             valid_pc.clear();
             for (const Eigen::Vector3d &p : points)
@@ -292,6 +294,7 @@ namespace sfc_gen
 
 
     }
+
 
 
     inline void shortCut(std::vector<Eigen::MatrixX4d> &hpolys)

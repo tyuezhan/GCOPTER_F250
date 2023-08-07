@@ -194,7 +194,7 @@ public:
             }                                    
         }
 
-
+        auto plan_t1 = ros::Time::now();
         endPVA.col(0) = route.back();
 
         /* corridor generation */
@@ -202,7 +202,7 @@ public:
         voxelMap.getSurf(pc);
 
         std::vector<Eigen::MatrixX4d> hPolys;
-        sfc_gen::convexCover(route,
+        sfc_gen::getPolyConst(route,
                                 pc,
                                 voxelMap.getOrigin(),
                                 voxelMap.getCorner(),
@@ -212,7 +212,9 @@ public:
         sfc_gen::shortCut(hPolys);
 
         ROS_INFO("Got %d convex hulls.", (int)hPolys.size());
+        ROS_WARN("[GCOPTER] SFC time: %lf", (ros::Time::now()-plan_t1).toSec());
 
+        auto time2 = ros::Time::now();
         gcopter::GCOPTER_PolytopeSFC gcopter;
 
         traj.clear();
@@ -230,13 +232,15 @@ public:
             return false;
         }
 
+
         if (std::isinf(gcopter.optimize(traj, config.relCostTol)))
         {
             ROS_ERROR("Failed to optimize GCOPTER!");
             return false;
         }
+        ROS_WARN("[GCOPTER] plan time: %lf", (ros::Time::now()-time2).toSec());
 
-        ROS_INFO("Got a trajectory with %d pieces.", traj.getPieceNum());
+        ROS_INFO("[GCOPTER] Got a trajectory with %d pieces.", traj.getPieceNum());
 
         if (traj.getPieceNum() > 0)
         {
