@@ -206,8 +206,8 @@ public:
                                 pc,
                                 voxelMap.getOrigin(),
                                 voxelMap.getCorner(),
-                                7.0,
                                 3.0,
+                                2.0,
                                 hPolys);
         sfc_gen::shortCut(hPolys);
 

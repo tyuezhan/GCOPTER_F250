@@ -241,7 +241,9 @@ namespace sfc_gen
         {
             if (i > 0)
             {
-                if (checkInsidePoly(path[i], hpolys.back()) && (a - path[i]).norm() <= progress)
+                if (checkInsidePoly(path[i], hpolys.back()) 
+                    && (a - path[i]).norm() <= progress
+                    && i < n-1)
                 {
                     //cnt_num ++;
                     continue;
