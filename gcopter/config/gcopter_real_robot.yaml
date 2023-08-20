@@ -1,0 +1,37 @@
+DilateRadius:               0.2
+
+VoxelWidth:                 0.10
+
+TimeoutRRT:                 0.05
+
+MaxVelMag:                  1.0
+
+MaxBdrMag:                  2.1
+
+MaxTiltAngle:               1.05
+
+MinThrust:                  4.3
+
+MaxThrust:                  20.0
+
+VehicleMass:                1.47
+
+GravAcc:                    9.8
+
+HorizDrag:                  0.70
+
+VertDrag:                   0.80
+
+ParasDrag:                  0.01
+
+SpeedEps:                   0.0001
+
+WeightT:                    20.0
+
+ChiVec:                     [1.0e+4, 1.0e+4, 1.0e+4, 1.0e+4, 1.0e+5]
+
+SmoothingEps:               1.0e-2
+
+IntegralIntervs:            16
+
+RelCostTol:                 1.0e-5
