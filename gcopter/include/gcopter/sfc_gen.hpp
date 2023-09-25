@@ -193,7 +193,7 @@ namespace sfc_gen
         Eigen::MatrixX3d A = hPoly.leftCols<3>().array().colwise() / hNorm;
         Eigen::VectorXd  b = -hPoly.rightCols<1>().array() / hNorm;
 
-        for (int i = 0; i < hPoly.cols(); i++){
+        for (int i = 0; i < hPoly.rows(); i++){
             double linear_const = A.row(i) * pt - b(i);
 
             if ( linear_const > 1e-3)
