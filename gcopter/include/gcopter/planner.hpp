@@ -135,7 +135,7 @@ public:
     }
 
 
-    inline void setMap(std::shared_ptr<bg_planner::SDFMap>& map)
+    inline void setMap(std::shared_ptr<ms_planner::SDFMap>& map)
     {
         /// step one: convert map
         const Eigen::Vector3i xyz(map->mp_->map_voxel_num_(0),
@@ -147,7 +147,7 @@ public:
         for (int x = map->mp_->box_min_(0); x < map->mp_->box_max_(0); ++x)
             for (int y = map->mp_->box_min_(1); y < map->mp_->box_max_(1); ++y)
                 for (int z = map->mp_->box_min_(2); z < map->mp_->box_max_(2); ++z) {
-                    if (map->getOccupancy(Eigen::Vector3i(x, y, z)) == bg_planner::SDFMap::OCCUPIED)
+                    if (map->getOccupancy(Eigen::Vector3i(x, y, z)) == ms_planner::SDFMap::OCCUPIED)
                     {
                         Eigen::Vector3i idx(x, y, z);
                         voxelMap.setOccupied(idx);
